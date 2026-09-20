@@ -2,22 +2,24 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, EmailStr
 
+#
 
-class AdminBase(BaseModel):
+
+class ClientBase(BaseModel):
     id: int
     full_name: str
-    email: EmailStr
+    phone_number: str
     is_active: bool
     created_at: datetime
 
 
-class AdminCreate(BaseModel):
+class ClientCreate(BaseModel):
     full_name: str = Field(min_length=5, max_length=50)
-    email: EmailStr
+    phone_number: str
     password: str
 
 
-class AdminUpdate(BaseModel):
+class ClientUpdate(BaseModel):
     full_name: str | None = Field(None, min_length=5, max_length=50)
-    email: EmailStr | None = Field(None)
+    phone_number: str | None = Field(None)
     is_active: bool | None = Field(None)

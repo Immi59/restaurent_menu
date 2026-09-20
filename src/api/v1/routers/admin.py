@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from src.core.security import hash_password
 from src.database.models import Admin
 from src.schemas.admin_schema import AdminCreate, AdminBase, AdminUpdate
 from src.api.v1.dependancies import get_admin_service
 from src.services.admin import AdminService
 from src.database.session import get_session
 
-router = APIRouter(prefix="/admins", tags=["admins"])
+router = APIRouter(prefix="/admins", tags=["Admins"])
 
 
 @router.get("/", response_model=list[AdminBase])
@@ -24,29 +25,40 @@ def create_admin(
         session: Session = Depends(get_session),
         service: AdminService = Depends(get_admin_service),
 ):
-    db_admin = Admin(**payload.model_dump())
+    payload_dump = payload.model_dump()
+    hashed_password = hash_password(payload_dump.get("password"))
+    payload_dump["hashed_password"] = hashed_password
+    payload_dump.pop("password")
+    '''
+    {
+        "full_name2": "Bexruz",
+        "email": "user@example.com",
+        "hashed_password": "hgevwfuybwfuyw"
+    }
+    '''
+    db_admin = Admin(**payload_dump)
     new_admin = service.create(session=session, obj=db_admin)
     return new_admin
 
 
-@router.get("/{category_id}", response_model=AdminBase, status_code=status.HTTP_200_OK)
+@router.get("/{admin_id}", response_model=AdminBase, status_code=status.HTTP_200_OK)
 def get_admin_by_id(
-        category_id: int,
+        admin_id: int,
         session: Session = Depends(get_session),
         service: AdminService = Depends(get_admin_service),
 ):
-    return service.get(session, category_id)
+    return service.get(session, admin_id)
 
 
-@router.put("/{category_id}", response_model=AdminBase, status_code=status.HTTP_200_OK)
+@router.patch("/{admin_id}", response_model=AdminBase, status_code=status.HTTP_200_OK)
 def update_admin(
         payload: AdminUpdate,
-        category_id: int,
+        admin_id: int,
         session: Session = Depends(get_session),
         service: AdminService = Depends(get_admin_service),
 ):
 
-    return service.update(session, category_id, payload)
+    return service.update(session, admin_id, payload)
 
 
 @router.delete("/{admin_id}", status_code=status.HTTP_204_NO_CONTENT)

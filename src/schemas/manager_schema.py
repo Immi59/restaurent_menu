@@ -3,21 +3,20 @@ from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr
 
 
-class AdminBase(BaseModel):
+class ManagerBase(BaseModel):
     id: int
     full_name: str
+    phone_number: str
     email: EmailStr
     is_active: bool
     created_at: datetime
 
 
-class AdminCreate(BaseModel):
+class ManagerCreate(BaseModel):
     full_name: str = Field(min_length=5, max_length=50)
     email: EmailStr
+    phone_number: str
     password: str
 
-
-class AdminUpdate(BaseModel):
-    full_name: str | None = Field(None, min_length=5, max_length=50)
-    email: EmailStr | None = Field(None)
-    is_active: bool | None = Field(None)
+class ManagerUpdate(ManagerCreate):
+        pass
