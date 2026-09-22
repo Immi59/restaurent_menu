@@ -26,9 +26,6 @@ def create_menu(
         session: Session = Depends(get_session),
         service: MenuService = Depends(get_menu_service),
 ):
-    category = session.query(Category).filter(Category.id == payload.category_id).first()
-    if not category:
-        raise NotFoundError(detail="Category not found")
 
     payload_dump = payload.model_dump()
     db_menu = Menu(**payload_dump)

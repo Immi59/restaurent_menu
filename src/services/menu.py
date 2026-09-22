@@ -1,16 +1,30 @@
 from sqlalchemy.orm import Session
 
+from src.services.base import ModelType
 from src.database.models import Category
 from src.core.exceptions import NotFoundError
 from src.database.models.menu import Menu
 from src.repositories.menu import MenuRepository
+from src.repositories.category import CategoryRepository
 from src.schemas.menu_schema import MenuUpdate, MenuCreate
 from src.services.base import BaseService
 
 
 class MenuService(BaseService[Menu]):
-    def __init__(self, repository: MenuRepository) -> None:
-        super().__init__(repository)
+    def __init__(self, menu_repo: MenuRepository, category_repo:CategoryRepository) -> None:
+        self.category_repo = category_repo
+        self.menu_repo = menu_repo
+        super().__init__(menu_repo)
+
+    def create(self, session: Session, obj: MenuCreate) -> MenuCreate:
+        category = self.category_repo.get(session, obj.category_id)
+
+        if not category:
+            raise NotFoundError(detail="Category not found")
+
+        return self.menu_repo.create(session, obj)
+
+
 
     def update(self, session: Session, id: int, obj: MenuUpdate) -> Menu:
         menu = self.repository.get(session, id)

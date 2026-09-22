@@ -23,8 +23,9 @@ def get_manager_service() -> ManagerService:
     return ManagerService(repository)
 
 def get_menu_service() -> MenuService:
-    repository = MenuRepository()
-    return MenuService(repository)
+    menu_repo = MenuRepository()
+    category_repo = CategoryRepository()
+    return MenuService(menu_repo, category_repo)
 
 def get_client_service() -> ClientService:
     repository = ClientRepository()
