@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
 from src.database.models import Category
-from src.schemas.category_schema import CategoryCreate, CategoryBase, CategoryUpdate
+from src.schemas.category_schema import CategoryCreate, CategoryBase, CategoryUpdate, CategoryFilter
 from src.api.v1.dependancies import get_category_service
 from src.services.category import CategoryService
 from src.database.session import get_session
@@ -12,6 +12,7 @@ router = APIRouter(prefix="/categories", tags=["Categories"])
 
 @router.get("/", response_model=list[CategoryBase])
 def get_all_categories(
+        filters: CategoryFilter = Query(None),
         session: Session = Depends(get_session),
         service: CategoryService = Depends(get_category_service),
 ):

@@ -6,15 +6,18 @@ from src.core.exceptions import NotFoundError
 from src.database.models.menu import Menu
 from src.repositories.menu import MenuRepository
 from src.repositories.category import CategoryRepository
-from src.schemas.menu_schema import MenuUpdate, MenuCreate
+from src.schemas.menu_schema import MenuUpdate, MenuCreate, MenuFilter
 from src.services.base import BaseService
 
 
 class MenuService(BaseService[Menu]):
-    def __init__(self, menu_repo: MenuRepository, category_repo:CategoryRepository) -> None:
+    def __init__(self, menu_repo: MenuRepository, category_repo: CategoryRepository) -> None:
         self.category_repo = category_repo
         self.menu_repo = menu_repo
         super().__init__(menu_repo)
+
+    def get_all_menu_by_filters(self, session: Session, filters: MenuFilter) -> list[Menu]:
+        return self.menu_repo.get_all_menu_by_filters(session, filters)
 
     def create(self, session: Session, obj: MenuCreate) -> MenuCreate:
         category = self.category_repo.get(session, obj.category_id)
@@ -23,8 +26,6 @@ class MenuService(BaseService[Menu]):
             raise NotFoundError(detail="Category not found")
 
         return self.menu_repo.create(session, obj)
-
-
 
     def update(self, session: Session, id: int, obj: MenuUpdate) -> Menu:
         menu = self.repository.get(session, id)

@@ -21,3 +21,7 @@ class AdminUpdate(BaseModel):
     full_name: str | None = Field(None, min_length=5, max_length=50)
     email: EmailStr | None = Field(None)
     is_active: bool | None = Field(None)
+
+class AdminFilter(BaseModel):
+    is_active: bool = Field(True)
+    category_id: int | None = Field(None)

@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
 
 from src.core.security import hash_password
 from src.database.models import Manager
-from src.schemas.manager_schema import ManagerCreate, ManagerBase, ManagerUpdate
+from src.schemas.manager_schema import ManagerCreate, ManagerBase, ManagerUpdate, ManagerFilter
 from src.api.v1.dependancies import get_manager_service
 from src.services.manager import ManagerService
 from src.database.session import get_session
@@ -13,6 +13,7 @@ router = APIRouter(prefix="/managers", tags=["Managers"])
 
 @router.get("/", response_model=list[ManagerBase])
 def get_all_managers(
+        filters: ManagerFilter = Query(None),
         session: Session = Depends(get_session),
         service: ManagerService = Depends(get_manager_service),
 ):

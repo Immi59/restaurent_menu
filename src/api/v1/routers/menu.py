@@ -1,10 +1,8 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
 
-from src.core.exceptions import NotFoundError
-from src.database.models import Category
 from src.database.models import Menu
-from src.schemas.menu_schema import MenuCreate, MenuBase, MenuUpdate
+from src.schemas.menu_schema import MenuCreate, MenuBase, MenuUpdate, MenuFilter
 from src.api.v1.dependancies import get_menu_service
 from src.services.menu import MenuService
 from src.database.session import get_session
@@ -14,10 +12,11 @@ router = APIRouter(prefix="/menus", tags=["Menus"])
 
 @router.get("/", response_model=list[MenuBase])
 def get_all_menus(
+        filters: MenuFilter = Query(None),
         session: Session = Depends(get_session),
         service: MenuService = Depends(get_menu_service),
 ):
-    return service.get_all(session=session)
+    return service.get_all_menu_by_filters(session=session, filters=filters)
 
 
 @router.post("/", response_model=MenuBase, status_code=status.HTTP_201_CREATED)
@@ -58,4 +57,4 @@ def delete_menu(
         session: Session = Depends(get_session),
         service: MenuService = Depends(get_menu_service),
 ):
-    return service.delete(session, menu_id)  # noqa
+    return service.delete(session, menu_id)  # noqaenu_id)  # noqa

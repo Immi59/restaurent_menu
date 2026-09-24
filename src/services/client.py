@@ -11,6 +11,9 @@ class ClientService(BaseService[Client]):
     def __init__(self, repository: ClientRepository) -> None:
         super().__init__(repository)
 
+    def get_all_client_by_filters(self, session: Session, filters: ClientUpdate) -> Client:
+        return self.repository.get_all_client_by_filters(session, filters)
+
     def update(self, session: Session, id: int, obj: ClientUpdate) -> Client:
         client = self.repository.get(session, id)
 

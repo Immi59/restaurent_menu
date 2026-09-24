@@ -33,3 +33,9 @@ class MenuUpdate(BaseModel):
     is_active: bool | None = None
     category_id: int | None = None
 
+
+class MenuFilter(BaseModel):
+    is_active: bool = Field(True)
+    category_id: int | None = Field(None)
+    price_m: str | None = Field("More than")
+    price_l: str | None = Field("Less than")

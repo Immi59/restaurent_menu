@@ -15,3 +15,7 @@ class CategoryCreate(BaseModel):
 
 class CategoryUpdate(CategoryCreate):
     pass
+
+class CategoryFilter(BaseModel):
+    is_active: bool = Field(True)
+    category_id: int | None = Field(None)

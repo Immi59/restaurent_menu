@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
 
 from src.core.security import hash_password
 from src.database.models import Admin
-from src.schemas.admin_schema import AdminCreate, AdminBase, AdminUpdate
+from src.schemas.admin_schema import AdminCreate, AdminBase, AdminUpdate, AdminFilter
 from src.api.v1.dependancies import get_admin_service
 from src.services.admin import AdminService
 from src.database.session import get_session
@@ -13,6 +13,7 @@ router = APIRouter(prefix="/admins", tags=["Admins"])
 
 @router.get("/", response_model=list[AdminBase])
 def get_all_admins(
+        filters: AdminFilter = Query(None),
         session: Session = Depends(get_session),
         service: AdminService = Depends(get_admin_service),
 ):

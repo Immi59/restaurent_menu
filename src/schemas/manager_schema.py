@@ -20,3 +20,7 @@ class ManagerCreate(BaseModel):
 
 class ManagerUpdate(ManagerCreate):
         pass
+
+class ManagerFilter(BaseModel):
+    is_active: bool = Field(True)
+    category_id: int | None = Field(None)
