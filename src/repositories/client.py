@@ -12,13 +12,17 @@ class ClientRepository(BaseRepository[Client]):
     def get_all_client_by_filters(self, session: Session, filters: ClientFilter) -> list[Client]:
         query = session.query(self.model)
 
-        if filters.category_id is not None:
-            query = query.where(self.model.created_at == filters.category_id)
-
         if filters.is_active is not None:
             query = query.where(self.model.is_active == filters.is_active)
 
         return list(session.scalars(query).all())
+
+    def get_user_by_phone_number(self, session: Session, phone_number: str) -> Client:
+        query = session.query(self.model)
+        if phone_number is not None:
+            query = query.where(self.model.phone_number == phone_number)
+
+        return session.scalar(query)
 
     def update(self, session: Session, obj: Client) -> Client:
         session.flush()

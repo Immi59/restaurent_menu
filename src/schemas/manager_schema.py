@@ -18,9 +18,13 @@ class ManagerCreate(BaseModel):
     phone_number: str
     password: str
 
+class ManagerLogin(BaseModel):
+    phone_number: str
+    password: str
+
 class ManagerUpdate(ManagerCreate):
         pass
 
 class ManagerFilter(BaseModel):
-    is_active: bool = Field(True)
-    category_id: int | None = Field(None)
+    full_name: str
+    phone_number: str

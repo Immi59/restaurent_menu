@@ -16,6 +16,10 @@ class AdminCreate(BaseModel):
     email: EmailStr
     password: str
 
+class AdminLogin(BaseModel):
+    email : str
+    password: str
+
 
 class AdminUpdate(BaseModel):
     full_name: str | None = Field(None, min_length=5, max_length=50)

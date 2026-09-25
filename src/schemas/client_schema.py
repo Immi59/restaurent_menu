@@ -19,12 +19,16 @@ class ClientCreate(BaseModel):
     password: str
 
 
+class ClientLogin(BaseModel):
+    phone_number: str
+    password: str
+
+
 class ClientUpdate(BaseModel):
     full_name: str | None = Field(None, min_length=5, max_length=50)
     phone_number: str | None = Field(None)
     is_active: bool | None = Field(None)
 
+
 class ClientFilter(BaseModel):
     is_active: bool = Field(True)
-    category_id: int | None = Field(None)
-    created_time: str | None = Field("yy.mm.dd")

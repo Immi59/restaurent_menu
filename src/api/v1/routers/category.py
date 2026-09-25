@@ -16,7 +16,7 @@ def get_all_categories(
         session: Session = Depends(get_session),
         service: CategoryService = Depends(get_category_service),
 ):
-    return service.get_all(session=session)
+    return service.get_all_category_by_filters(session=session, filters=filters)
 
 
 @router.post("/", response_model=CategoryBase, status_code=status.HTTP_201_CREATED)

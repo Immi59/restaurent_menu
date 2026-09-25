@@ -3,13 +3,16 @@ from sqlalchemy.orm import Session
 from src.core.exceptions import NotFoundError
 from src.database.models.category import Category
 from src.repositories.category import CategoryRepository
-from src.schemas.category_schema import CategoryUpdate
+from src.schemas.category_schema import CategoryUpdate, CategoryFilter
 from src.services.base import BaseService
 
 
 class CategoryService(BaseService[Category]):
     def __init__(self, repository: CategoryRepository) -> None:
         super().__init__(repository)
+
+    def get_all_menu_by_filters(self, session: Session, filters: CategoryFilter) -> list[Category]:
+        return self.repository.get_all_menu_by_filters(session, filters)
 
     def update(self, session: Session, id: int, obj: CategoryUpdate) -> Category:
         category = self.repository.get(session, id)
