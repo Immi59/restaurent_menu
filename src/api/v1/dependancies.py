@@ -21,7 +21,9 @@ from src.repositories.admin import AdminRepository
 from src.repositories.category import CategoryRepository
 from src.services.category import CategoryService
 
-access_token_scheme = HTTPBearer(scheme_name="access-token", auto_error=False)
+client_access_token_scheme = HTTPBearer(scheme_name="client-access-token", auto_error=False)
+admin_access_token_scheme = HTTPBearer(scheme_name="admin-access-token", auto_error=False)
+manager_access_token_scheme = HTTPBearer(scheme_name="manager-access-token", auto_error=False)
 
 
 def get_category_service() -> CategoryService:
@@ -51,7 +53,7 @@ def get_client_service() -> ClientService:
 
 
 def get_current_client(
-        credentials: HTTPAuthorizationCredentials | None = Security(access_token_scheme),
+        credentials: HTTPAuthorizationCredentials | None = Security(client_access_token_scheme),
         session: AsyncSession = Depends(get_session),
         service: ClientService = Depends(get_client_service),
 ) -> Client:
@@ -83,9 +85,9 @@ def get_current_client(
     return client
 
 def get_current_admin(
-        credentials: HTTPAuthorizationCredentials | None = Security(access_token_scheme),
+        credentials: HTTPAuthorizationCredentials | None = Security(admin_access_token_scheme),
         session: AsyncSession = Depends(get_session),
-        service: ClientService = Depends(get_client_service),
+        service: AdminService = Depends(get_admin_service),
 ) -> Admin:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -115,9 +117,9 @@ def get_current_admin(
     return admin
 
 def get_current_manager(
-        credentials: HTTPAuthorizationCredentials | None = Security(access_token_scheme),
+        credentials: HTTPAuthorizationCredentials | None = Security(manager_access_token_scheme),
         session: AsyncSession = Depends(get_session),
-        service: ClientService = Depends(get_client_service),
+        service: ManagerService = Depends(get_manager_service),
 ) -> Manager:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

@@ -17,7 +17,7 @@ class AdminService(BaseService[Admin]):
         return self.repository.get_all_menu_by_filters(session, filters)
 
     def login(self, session: Session, obj: AdminLogin) -> TokenSchema:
-        exists_email = self.repository.get_user_by_email(session, obj.email)
+        exists_email = self.repository.get_admin_by_email(session, obj.email)
 
         if not exists_email:
             raise NotFoundError(detail="Phone number not exists")
@@ -28,7 +28,7 @@ class AdminService(BaseService[Admin]):
         return self._issue_tokens(exists_email.id)
 
     def create(self, session: Session, obj: Admin) -> TokenSchema:
-        exists_email = self.repository.get_user_by_email(session, obj.email)
+        exists_email = self.repository.get_admin_by_email(session, obj.email)
 
         if exists_email:
             raise ConflictError(detail="Phone number already exists")

@@ -46,10 +46,10 @@ def login_client(
 
 
 @router.get("/me", response_model=ManagerBase, status_code=status.HTTP_200_OK)
-def get_client_me(
-        current_client: Manager = Depends(get_current_manager),
+def get_manager_me(
+        current_manager: Manager = Depends(get_current_manager),
 ):
-    return current_client
+    return current_manager
 
 
 @router.get("/{manager_id}", response_model=ManagerBase, status_code=status.HTTP_200_OK)
